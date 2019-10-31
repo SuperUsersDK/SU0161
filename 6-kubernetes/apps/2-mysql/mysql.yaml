@@ -1,0 +1,7 @@
+---
+mysqlUser: localUsr
+mysqlPassword: localUsrxPwd#
+mysqlRootPassword: correcthorsebatterystaple
+persistence:
+  enabled: true
+  storageClass: local-path
