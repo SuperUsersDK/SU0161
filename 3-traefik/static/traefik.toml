@@ -1,0 +1,42 @@
+[entryPoints]
+  [entryPoints.http]
+  address = ":80"
+    [entryPoints.http.redirect]
+    entryPoint = "https"
+  [entryPoints.https]
+  address = ":443"
+    [entryPoints.https.tls]
+      [[entryPoints.https.tls.certificates]]
+      certFile = "tests/traefik.crt"
+      keyFile = "tests/traefik.key"
+
+[frontends]
+  [frontends.frontend1]
+  backend = "backend2"
+ 	[frontends.frontend1.routes.test_1]
+	 rule = "Host:test.localhost,test2.localhost"
+  [frontends.frontend2]
+  backend = "backend1"
+ 	[frontends.frontend2.routes.test_1]
+	 rule = "HostRegexp:localhost,{subdomain:[a-z]+}.localhost"
+  [frontends.frontend3]
+  backend = "backend2"
+ 	[frontends.frontend3.routes.test_1]
+	 rule = "Host:test3.localhost;Path:/test"
+
+[backends]
+  [backends.backend1]
+ 	[backends.backend1.servers.server1]
+	 url = "http://172.17.0.2:80"
+	 weight = 10
+	[backends.backend1.servers.server2]
+	 url = "http://172.17.0.3:80"
+ 	 weight = 1
+  [backends.backend2]
+ 	[backends.backend2.servers.server1]
+	 url = "https://172.17.0.4:443"
+	 weight = 1
+	 [backends.backend2.servers.server2]
+	 url = "https://172.17.0.5:443"
+	 weight = 2
+
