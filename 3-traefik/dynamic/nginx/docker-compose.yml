@@ -1,0 +1,41 @@
+traefik:
+  image: traefik
+  container_name: "traefik"
+  command:
+    - "--log.level=DEBUG"
+    - "--api.insecure=true"
+    - "--providers.docker=true"
+    - "--providers.docker.exposedbydefault=false"
+    - "--entrypoints.web.address=:80"
+  ports:
+    - "80:80"
+    - "8080:8080"
+  volumes:
+    - "/var/run/docker.sock:/var/run/docker.sock:ro"
+nginx1:
+  image: nginx
+  container_name: "nginx-nummer-1"
+  labels:
+    - "traefik.enable=true"
+    - "traefik.http.routers.nginx1.rule=Host(`nginx1.localhost`)"
+    - "traefik.http.routers.nginx1.entrypoints=web"
+  volumes:
+    - "$PWD/nginx1.html:/usr/share/nginx/html/index.html:ro"
+nginx2:
+  image: nginx
+  container_name: "nginx-nummer-2"
+  labels:
+    - "traefik.enable=true"
+    - "traefik.http.routers.nginx2.rule=Host(`nginx2.localhost`)"
+    - "traefik.http.routers.nginx2.entrypoints=web"
+  volumes:
+    - "$PWD/nginx2.html:/usr/share/nginx/html/index.html:ro"
+nginx3:
+  image: nginx
+  container_name: "nginx-nummer-3"
+  labels:
+    - "traefik.enable=true"
+    - "traefik.http.routers.nginx3.rule=Host(`nginx3.localhost`)"
+    - "traefik.http.routers.nginx3.entrypoints=web"
+  volumes:
+    - "$PWD/nginx3.html:/usr/share/nginx/html/index.html:ro"
