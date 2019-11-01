@@ -17,6 +17,11 @@ Firewalld skal disables og iptables enables på manager(s) og workers:
 ```bash
 systemctl disable firewalld
 systemctl stop firewalld
+```
+
+Iptables enables på manager(s) og workers:
+```bash
+modprobe br_netfilter
 echo '1' | tee /proc/sys/net/bridge/bridge-nf-call-{iptables,ip6tables,arptables}
 echo 'net.bridge.bridge-nf-call-iptables = 1' > /etc/sysctl.d/99-nf-call-iptables.conf
 echo 'net.bridge.bridge-nf-call-ip6tables = 1' >> /etc/sysctl.d/99-nf-call-iptables.conf
