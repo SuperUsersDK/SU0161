@@ -23,8 +23,10 @@ echo "[+] Disable firewalld. Enable iptables"
 /bin/systemctl disable firewalld
 /bin/systemctl stop firewalld
 /sbin/modprobe br_netfilter
-echo '1' > /proc/sys/net/bridge/bridge-nf-call-iptables
+echo '1' | tee /proc/sys/net/bridge/bridge-nf-call-{iptables,ip6tables,arptables}
 echo 'net.bridge.bridge-nf-call-iptables = 1' > /etc/sysctl.d/99-nf-call-iptables.conf
+echo 'net.bridge.bridge-nf-call-ip6tables = 1' >> /etc/sysctl.d/99-nf-call-iptables.conf
+echo 'net.bridge.bridge-nf-call-arptables = 1' >> /etc/sysctl.d/99-nf-call-iptables.conf
 echo
 
 echo "[+] Flush iptables"
