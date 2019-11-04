@@ -73,6 +73,10 @@ kubeadm init --pod-network-cidr=10.0.1.0/24 --apiserver-advertise-address=10.0.0
 ```
 
 10. Run the command that is printed on the screen on the nodes to get them to join the cluster.
+The command have the following form:
+```bash
+kubeadm join <manager-ip:port> --token <token> --discovery-token-ca-cert-hash <hash>
+```
 
 11. På manageren resten køres som en alm. bruger med sudo-rettigheder:
 ```bash
