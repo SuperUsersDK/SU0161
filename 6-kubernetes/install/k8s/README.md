@@ -15,6 +15,7 @@ sed -i 's/^SELINUX=enforcing$/SELINUX=permissive/' /etc/selinux/config
 
 Firewalld skal disables og iptables enables på manager(s) og workers:
 ```bash
+modprobe br_netfilter # might be br_filter on your linux
 systemctl disable firewalld
 systemctl stop firewalld
 echo '1' | tee /proc/sys/net/bridge/bridge-nf-call-{iptables,ip6tables,arptables}
@@ -64,10 +65,14 @@ cat <<EOT >> /etc/hosts
 10.0.0.30 worker2
 ```
 
+Shutdown manager and workers. Do a snapshot in Virtual Box and call it "After Initialize"
+
 På manager:
 ```bash
 kubeadm init --pod-network-cidr=10.0.1.0/24 --apiserver-advertise-address=10.0.0.10 # erstat 10.0.0.10 med managers ip. Tager lang tid
 ```
+
+Run the command that is printed on the screen on the nodes to get them to join the cluster.
 
 På manageren resten køres som en alm. bruger med sudo-rettigheder:
 ```bash
@@ -91,6 +96,8 @@ kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v1.10.1/
 kubectl proxy
 ```
 
+Do only this if the nodes is not joined!
+
 ```bash
 kubeadm token create --print-join-command
 ```
@@ -106,6 +113,12 @@ kubectl get nodes
 kubectl apply -f https://k8s.io/examples/service/access/hello-application.yaml
 ```
 
+Observe the deployment using the following commands:
+
+```bash
+kubectl get deployments
+kubectl get pods
+```
 
 
 
