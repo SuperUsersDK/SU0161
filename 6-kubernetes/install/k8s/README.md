@@ -1,19 +1,19 @@
 # Kubernetes install guide til CentOS 7
 
-Swap skal disables på manager(s) og workers:
+1. Swap skal disables på manager(s) og workers:
 ```bash
 swapoff /dev/dm-1
 sed -i '/swap/s/^/#/' /etc/fstab
 ```
 
-Desværre så skal SELinux disables:
+2. Desværre så skal SELinux disables:
 ```bash
 # Set SELinux in permissive mode (effectively disabling it)
 setenforce 0
 sed -i 's/^SELINUX=enforcing$/SELINUX=permissive/' /etc/selinux/config
 ```
 
-Firewalld skal disables og iptables enables på manager(s) og workers:
+3. Firewalld skal disables og iptables enables på manager(s) og workers:
 ```bash
 modprobe br_netfilter # might be br_filter on your linux
 systemctl disable firewalld
@@ -31,7 +31,7 @@ iptables -F
 iptables -X
 ```
 
-På manager(s) og workers skal repo tilføjes og software installeres:
+4. På manager(s) og workers skal repo tilføjes og software installeres:
 ```bash
 cat <<EOT > /etc/yum.repos.d/kubernetes.repo
 [kubernetes]
@@ -45,19 +45,19 @@ EOT
 yum install -y kubectl kubeadm docker etcd
 ```
 
-På manager(s) og workers skal docker+kubelet OS-service enables og startes:
+5. På manager(s) og workers skal docker+kubelet OS-service enables og startes:
 ```bash
 systemctl enable docker.service kubelet.service
 systemctl start docker.service kubelet.service
 ```
 
-På manager(s) og workers er det rart med bash tab-completions:
+6. På manager(s) og workers er det rart med bash tab-completions:
 ```bash
 yum install -y bash-completion
 kubectl completion bash >/etc/bash_completion.d/kubectl
 ```
 
-Og tilføje hostname/ip'er til host-filen (eller i DNS)
+7. Og tilføje hostname/ip'er til host-filen (eller i DNS)
 ```bash
 cat <<EOT >> /etc/hosts
 10.0.0.10 manager
@@ -65,16 +65,16 @@ cat <<EOT >> /etc/hosts
 10.0.0.30 worker2
 ```
 
-Shutdown manager and workers. Do a snapshot in Virtual Box and call it "After Initialize"
+8. Shutdown manager and workers. Do a snapshot in Virtual Box and call it "After Initialize"
 
-På manager:
+9. På manager:
 ```bash
 kubeadm init --pod-network-cidr=10.0.1.0/24 --apiserver-advertise-address=10.0.0.10 # erstat 10.0.0.10 med managers ip. Tager lang tid
 ```
 
-Run the command that is printed on the screen on the nodes to get them to join the cluster.
+10. Run the command that is printed on the screen on the nodes to get them to join the cluster.
 
-På manageren resten køres som en alm. bruger med sudo-rettigheder:
+11. På manageren resten køres som en alm. bruger med sudo-rettigheder:
 ```bash
   su - bruger
   mkdir -p $HOME/.kube
@@ -82,21 +82,22 @@ På manageren resten køres som en alm. bruger med sudo-rettigheder:
   sudo chown $(id -u):$(id -g) $HOME/.kube/config
 ```
 
-Der skal vælges en network provider fra listen på https://kubernetes.io/docs/concepts/cluster-administration/addons/ \\
+12. Der skal vælges en network provider fra listen på https://kubernetes.io/docs/concepts/cluster-administration/addons/ \\
 Her vælges Calico:
 ```bash
 kubectl apply -f https://docs.projectcalico.org/v3.10/manifests/calico.yaml
 ```
 
 
-Og installeres Kube Dashboard. Bagefter forbinde på adressen: \\
+13. Og installeres Kube Dashboard. Bagefter forbinde på adressen: \\
 http://<manager-exteral-ip>:8001/api/v1/namespaces/kube-system/services/https:kubernetes-dashboard:/proxy/
+
 ```bash
 kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v1.10.1/src/deploy/recommended/kubernetes-dashboard.yaml
 kubectl proxy
 ```
 
-Do only this if the nodes is not joined!
+14. Do only this if the nodes is not joined!
 
 ```bash
 kubeadm token create --print-join-command
@@ -107,13 +108,13 @@ og brug outputtet på workers:
 kubeadm join <manager-ip:port> --token <token> --discovery-token-ca-cert-hash <hash>
 ```
 
-Og test tilsidst på manager med:
+15. Og test tilsidst på manager med:
 ```bash
 kubectl get nodes
 kubectl apply -f https://k8s.io/examples/service/access/hello-application.yaml
 ```
 
-Observe the deployment using the following commands:
+16. Observe the deployment using the following commands:
 
 ```bash
 kubectl get deployments
