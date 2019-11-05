@@ -57,28 +57,20 @@ yum install -y bash-completion
 kubectl completion bash >/etc/bash_completion.d/kubectl
 ```
 
-7. Og tilføje hostname/ip'er til host-filen (eller i DNS)
-```bash
-cat <<EOT >> /etc/hosts
-10.0.0.10 manager
-10.0.0.20 worker1
-10.0.0.30 worker2
-```
+7. Shutdown manager og workers. Lav et snapshot i Virtual Box og kald det "After Initialize"
 
-8. Shutdown manager and workers. Do a snapshot in Virtual Box and call it "After Initialize"
-
-9. På manager:
+8. På manager:
 ```bash
 kubeadm init --pod-network-cidr=10.0.1.0/24 --apiserver-advertise-address=10.0.0.10 # erstat 10.0.0.10 med managers ip. Tager lang tid
 ```
 
-10. Run the command that is printed on the screen on the nodes to get them to join the cluster.
+9. Kør kommandoen der vises på  the command that is printed on the screen on the nodes to get them to join the cluster.
 The command have the following form:
 ```bash
 kubeadm join <manager-ip:port> --token <token> --discovery-token-ca-cert-hash <hash>
 ```
 
-11. På manageren resten køres som en alm. bruger med sudo-rettigheder:
+10. På manageren resten køres som en alm. bruger med sudo-rettigheder:
 ```bash
   su - bruger
   mkdir -p $HOME/.kube
@@ -86,14 +78,14 @@ kubeadm join <manager-ip:port> --token <token> --discovery-token-ca-cert-hash <h
   sudo chown $(id -u):$(id -g) $HOME/.kube/config
 ```
 
-12. Der skal vælges en network provider fra listen på https://kubernetes.io/docs/concepts/cluster-administration/addons/ \\
+11. Der skal vælges en network provider fra listen på https://kubernetes.io/docs/concepts/cluster-administration/addons/ \\
 Her vælges Calico:
 ```bash
 kubectl apply -f https://docs.projectcalico.org/v3.10/manifests/calico.yaml
 ```
 
 
-13. Do only this if the nodes is not joined!
+12. Do only this if the nodes is not joined!
 
 ```bash
 kubeadm token create --print-join-command
@@ -104,13 +96,13 @@ og brug outputtet på workers:
 kubeadm join <manager-ip:port> --token <token> --discovery-token-ca-cert-hash <hash>
 ```
 
-14. Og test tilsidst på manager med:
+13. Og test tilsidst på manager med:
 ```bash
 kubectl get nodes
 kubectl apply -f https://k8s.io/examples/service/access/hello-application.yaml
 ```
 
-15. Observe the deployment using the following commands:
+14. Observe the deployment using the following commands:
 
 ```bash
 kubectl get deployments
