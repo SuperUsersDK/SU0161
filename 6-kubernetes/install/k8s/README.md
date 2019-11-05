@@ -64,8 +64,7 @@ kubectl completion bash >/etc/bash_completion.d/kubectl
 kubeadm init --pod-network-cidr=10.0.1.0/24 --apiserver-advertise-address=10.0.0.10 # erstat 10.0.0.10 med managers ip. Tager lang tid
 ```
 
-9. Kør kommandoen der vises på  the command that is printed on the screen on the nodes to get them to join the cluster.
-The command have the following form:
+9. Kør på de to workere, så de kan blive en del af clusteret:
 ```bash
 kubeadm join <manager-ip:port> --token <token> --discovery-token-ca-cert-hash <hash>
 ```
