@@ -93,15 +93,7 @@ kubectl apply -f https://docs.projectcalico.org/v3.10/manifests/calico.yaml
 ```
 
 
-13. Og installeres Kube Dashboard. Bagefter forbinde på adressen: \\
-http://<manager-exteral-ip>:8001/api/v1/namespaces/kube-system/services/https:kubernetes-dashboard:/proxy/
-
-```bash
-kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v1.10.1/src/deploy/recommended/kubernetes-dashboard.yaml
-kubectl proxy
-```
-
-14. Do only this if the nodes is not joined!
+13. Do only this if the nodes is not joined!
 
 ```bash
 kubeadm token create --print-join-command
@@ -112,13 +104,13 @@ og brug outputtet på workers:
 kubeadm join <manager-ip:port> --token <token> --discovery-token-ca-cert-hash <hash>
 ```
 
-15. Og test tilsidst på manager med:
+14. Og test tilsidst på manager med:
 ```bash
 kubectl get nodes
 kubectl apply -f https://k8s.io/examples/service/access/hello-application.yaml
 ```
 
-16. Observe the deployment using the following commands:
+15. Observe the deployment using the following commands:
 
 ```bash
 kubectl get deployments
