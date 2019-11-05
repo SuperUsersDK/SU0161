@@ -84,8 +84,7 @@ kubectl apply -f https://docs.projectcalico.org/v3.10/manifests/calico.yaml
 ```
 
 
-12. Do only this if the nodes is not joined!
-
+12. Hvis noderne ikke er joinet endu, så kør på manageren:
 ```bash
 kubeadm token create --print-join-command
 ```
@@ -101,8 +100,7 @@ kubectl get nodes
 kubectl apply -f https://k8s.io/examples/service/access/hello-application.yaml
 ```
 
-14. Observe the deployment using the following commands:
-
+14. Og se alt er ok med kommandoerne:
 ```bash
 kubectl get deployments
 kubectl get pods
