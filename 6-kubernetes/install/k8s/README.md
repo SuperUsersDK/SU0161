@@ -69,6 +69,7 @@ kubeadm join <manager-ip:port> --token <token> --discovery-token-ca-cert-hash <h
 
 9. På manageren resten køres som en alm. bruger med sudo-rettigheder:
 ```bash
+  usermod -aG wheel bruger
   su - bruger
   mkdir -p $HOME/.kube
   sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
