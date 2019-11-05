@@ -57,19 +57,17 @@ yum install -y bash-completion
 kubectl completion bash >/etc/bash_completion.d/kubectl
 ```
 
-7. Shutdown manager og workers. Lav et snapshot i Virtual Box og kald det "After Initialize"
-
-8. På manager:
+7. På manager:
 ```bash
 kubeadm init --pod-network-cidr=10.0.1.0/24 --apiserver-advertise-address=10.0.0.10 # erstat 10.0.0.10 med managers ip. Tager lang tid
 ```
 
-9. Kør på de to workere, så de kan blive en del af clusteret:
+8. Kør på de to workere, så de kan blive en del af clusteret:
 ```bash
 kubeadm join <manager-ip:port> --token <token> --discovery-token-ca-cert-hash <hash>
 ```
 
-10. På manageren resten køres som en alm. bruger med sudo-rettigheder:
+9. På manageren resten køres som en alm. bruger med sudo-rettigheder:
 ```bash
   su - bruger
   mkdir -p $HOME/.kube
@@ -77,14 +75,13 @@ kubeadm join <manager-ip:port> --token <token> --discovery-token-ca-cert-hash <h
   sudo chown $(id -u):$(id -g) $HOME/.kube/config
 ```
 
-11. Der skal vælges en network provider fra listen på https://kubernetes.io/docs/concepts/cluster-administration/addons/ \\
+10. Der skal vælges en network provider fra listen på https://kubernetes.io/docs/concepts/cluster-administration/addons/ \\
 Her vælges Calico:
 ```bash
 kubectl apply -f https://docs.projectcalico.org/v3.10/manifests/calico.yaml
 ```
 
-
-12. Hvis noderne ikke er joinet endu, så kør på manageren:
+11. Hvis noderne ikke er joinet endu, så kør på manageren:
 ```bash
 kubeadm token create --print-join-command
 ```
@@ -94,13 +91,13 @@ og brug outputtet på workers:
 kubeadm join <manager-ip:port> --token <token> --discovery-token-ca-cert-hash <hash>
 ```
 
-13. Og test tilsidst på manager med:
+12. Og test tilsidst på manager med:
 ```bash
 kubectl get nodes
 kubectl apply -f https://k8s.io/examples/service/access/hello-application.yaml
 ```
 
-14. Og se alt er ok med kommandoerne:
+13. Og se alt er ok med kommandoerne:
 ```bash
 kubectl get deployments
 kubectl get pods
